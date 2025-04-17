@@ -1,0 +1,64 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+:root{
+
+    --grey : #121416;
+    --grey1: #212529;
+    --grey2: #343a40;
+    --grey3: #495057;
+    --grey4: #6c757d;
+
+    --aiBg : #252525;
+
+    --light: #495057;
+
+    --baseColor : #0c0e12;
+    --primaryColor : #13171c;
+    --secondaryColor : #232631;
+    --tertiaryColor : #ffff;
+    
+    --borderColor : #22272a;
+
+}
+  
+
+.ai-container{
+    width: 100%;
+    height: 100%;
+    background-color: var(--grey);
+    padding: 5px;
+    border-radius: 19px;
+    .ai-wrapper{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        border-radius: 17px;
+        overflow: hidden;
+        // background-color: var(--grey1);
+        .ai-sidebar{
+            width: 4%;
+            height: 100%;
+        }
+        .main-container{
+            width: 96%;
+            height: 100%;
+            background-color: var(--borderColor);
+            padding: 3px;
+            border-radius: 15px;
+            z-index: 2;
+
+
+            .main-wrapper{
+                width: 100%;
+                height: 100%;
+                border-radius: 11px;
+                overflow: hidden;
+
+            }
+        }
+    }
+
+}

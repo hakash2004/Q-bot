@@ -1,0 +1,80 @@
+.fontL{
+    color: rgb(180, 180, 180);
+}
+.fontM{
+    font-size: medium;
+}
+.fontMD{
+    font-size: medium;
+    font-weight: 600;
+    color: rgb(98, 98, 98);
+}
+.card{
+    box-shadow: rgba(0, 0, 0, 0.252) 0px 1px 4px;
+}
+.fontML{
+    font-size: medium;
+    font-weight: 600;
+    color: rgb(180, 180, 180);
+}
+.fontXS{
+    font-size: x-small;
+}
+.fontS{
+    font-size: small;
+}
+.fontD{
+    font-weight: 600;
+    color: rgb(111, 111, 111);
+}
+.fontBD{
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 600;
+    color: rgb(111, 111, 111);
+}
+.fontBL{
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 600;
+    color: rgb(180, 180, 180);
+}
+.fontSL{
+    font-size: small;
+    color: rgb(180, 180, 180);
+}
+.fontXSL{
+    font-size: x-small;
+    color: rgb(180, 180, 180);
+}
+.f{
+    display: flex;
+}
+.fc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;    
+}
+.fr{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.frsb{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.frfs{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    // background-color: #17c9006a;
+}
+.fcfs{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
