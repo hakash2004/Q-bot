@@ -33,7 +33,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   );
 
   // Determine stroke color based on attendance vs mandatory level
-  const progressColor = attendance < mandatoryLevel ? "#ff0000" : "#00ff00"; // Red if below, Green if above
+  const progressColor = attendance < mandatoryLevel ? "black" : "black"; // Red if below, Green if above
 
   // Update animated value only once when the component loads
   useEffect(() => {
@@ -110,7 +110,7 @@ const LineProgress: React.FC<LineProgressProps> = ({
   const animatedValue = useMotionValue(0);
   const animatedPercentage = useSpring(animatedValue, { damping: 20, stiffness: 100 });
 
-  const progressColor = attendance < mandatoryLevel ? "#ff0000" : "#00ff00"; // Red or Green
+  const progressColor = attendance < mandatoryLevel ? "#ff0000" : "black"; // Red or Green
 
   const progressWidth = useTransform(animatedPercentage, (latest) =>
     `${(latest / 100) * width}px`

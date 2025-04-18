@@ -1,3 +1,4 @@
+'use client'
 import "./dashboard.scss";
 
 const CourseStatusCard = ({ border, bg, count, type, icon }: { border: string; bg: string; count : number; type:string, icon : React.JSX.Element}) => {
@@ -5,14 +6,14 @@ const CourseStatusCard = ({ border, bg, count, type, icon }: { border: string; b
       <>
         <div
           className="statusCard-container"
-          style={{ border: `solid 3px ${border}` }}
+          style={{ }}
         >
           <div
             className="statusCard-wrapper"
             style={{ backgroundColor: `${bg}` }}
           >
             <div className="top">
-              <div className="icon" style={{backgroundColor : `${border}`}} >{icon}</div>
+              <div className="icon" style={{backgroundColor : `${"white"}`}} >{icon}</div>
               <div className="content">
                 <div className="count">{count}</div>
                 <div className="title">{type}</div>

@@ -3,20 +3,15 @@ import AiSidebar from "@/components/ai/sidebar"
 import "./page.scss"
 import { useState } from "react"
 import AiChat from "@/components/ai/chat";
-import AiDashboard from "@/components/ai/dashboard/main";
-import AiUpSkill from "@/components/ai/upskill";
 
-export default function ai(){
+export default function AI(){
 
-    // const [activeItem, setActiveItem] = useState("CHAT");
-    const [activeItem, setActiveItem] = useState("DASHBOARD");
+    const [activeItem, setActiveItem] = useState("CHAT");
     
     const renderActiveItem = (activeItem : string) => {
         switch(activeItem){
             case "CHAT" : return <AiChat />;
-            case "DASHBOARD" : return <AiDashboard />;
-            case "UPSKILL" : return <AiUpSkill />;
-         }
+        }
     }
     return(
         <>

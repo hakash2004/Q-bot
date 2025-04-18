@@ -1,8 +1,12 @@
+'use client'
 // import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import Sidebar from "../../components/sidebar";
 import Header from "../../components/header";
 import "./globals.css";
+import { usePathname } from "next/navigation";
+import  FloatingBubble from "@/helper/bubble";
+import AI from "./ai/page";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -24,9 +28,14 @@ export default function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const showBubble = !pathname.startsWith('/qbot');
+
   return (
     // <html lang="en">
-      // <body>      
+      // <body>
+      <>
+        {showBubble && <FloatingBubble children={<AI />} />}
         <div className="layout-grid-container">
           <div className="header">
             <Header />
@@ -36,8 +45,9 @@ export default function MainLayout({
           </div>
           <div className="mainLayout-children-container">
             {children}
-          </div>
+          </div>    
         </div>
+      </>
       // </body>
     // </html>
   );

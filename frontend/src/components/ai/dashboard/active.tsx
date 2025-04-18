@@ -1,3 +1,4 @@
+"use client";
 import { CircularProgressBar, LineProgressBar } from "@/components/progressBar";
 import { Play, ChevronDown } from "lucide-react";
 import { useState } from "react";
@@ -77,6 +78,11 @@ export default function Active() {
     { name: "Page G", uv: 3490, pv: 4300, amt: 2100 },
   ];
 
+  // chart colors
+  const LINE_COLOR = "#000000"; // black
+  const FILL_START_COLOR = "#888888"; // grey start
+  const FILL_END_COLOR = "#eeeeee";   // light grey end
+
   return (
     <div className="active-container">
       <div className="active-wrapper">
@@ -97,8 +103,10 @@ export default function Active() {
                     style={
                       activeList === "ACTIVE"
                         ? {
-                            color: "rgb(68, 143, 255)",
-                            backgroundColor: "rgba(0, 102, 255, 0.17)",
+                            // color: "rgb(68, 143, 255)",
+                            // backgroundColor: "rgba(0, 102, 255, 0.17)",
+                            color: "rgb(0, 0, 0)",
+                            backgroundColor: "rgba(0, 0, 0, 0.1)",
                           }
                         : {}
                     }
@@ -112,8 +120,8 @@ export default function Active() {
                     style={
                       activeList === "COMPLETE"
                         ? {
-                            color: "rgb(68, 143, 255)",
-                            backgroundColor: "rgba(0, 102, 255, 0.17)",
+                            color: "rgb(0, 0, 0)",
+                            backgroundColor: "rgba(0, 0, 0, 0.1)",
                           }
                         : {}
                     }
@@ -125,7 +133,6 @@ export default function Active() {
               </>
             )}
 
-            {/* ^ */}
             <button
               className="dropDown"
               style={{ transition: "transform 0.3s ease" }}
@@ -166,7 +173,6 @@ export default function Active() {
           }}
         >
           <div className="title">CHART</div>
-          {/* ^ */}
           <button
             className="dropDown"
             style={{ transition: "transform 0.3s ease" }}
@@ -189,12 +195,28 @@ export default function Active() {
               >
                 <defs>
                   <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                    <stop
+                      offset="5%"
+                      stopColor={FILL_START_COLOR}
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor={FILL_END_COLOR}
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                   <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                    <stop
+                      offset="5%"
+                      stopColor={FILL_START_COLOR}
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor={FILL_END_COLOR}
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="name" />
@@ -204,14 +226,14 @@ export default function Active() {
                 <Area
                   type="monotone"
                   dataKey="uv"
-                  stroke="#8884d8"
+                  stroke={LINE_COLOR}
                   fillOpacity={1}
                   fill="url(#colorUv)"
                 />
                 <Area
                   type="monotone"
                   dataKey="pv"
-                  stroke="#82ca9d"
+                  stroke={LINE_COLOR}
                   fillOpacity={1}
                   fill="url(#colorPv)"
                 />
