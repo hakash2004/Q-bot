@@ -4,7 +4,7 @@ import "./page.scss"
 import { useState } from "react"
 import AiChat from "@/components/ai/chat";
 
-export default function AI(){
+export default function AiBubble(){
 
     const [activeItem, setActiveItem] = useState("CHAT");
     

@@ -6,7 +6,7 @@ import Header from "../../components/header";
 import "./globals.css";
 import { usePathname } from "next/navigation";
 import  FloatingBubble from "@/helper/bubble";
-import AI from "./ai/page";
+import AiBubble from "./ai/page";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -35,7 +35,7 @@ export default function MainLayout({
     // <html lang="en">
       // <body>
       <>
-        {showBubble && <FloatingBubble children={<AI />} />}
+        {showBubble && <FloatingBubble children={<AiBubble />} />}
         <div className="layout-grid-container">
           <div className="header">
             <Header />
