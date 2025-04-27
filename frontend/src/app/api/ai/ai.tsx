@@ -74,15 +74,21 @@ interface AiProps {
 
 const Ai = ({ input, onResponse }: AiProps) => {
   const [result, setResult] = useState<any>(null);
-  const apiKey = process.env.NEXT_PUBLIC_MISTRAL_API_KEY; 
+  const [loading, setLoading] = useState(false);
+  const apiKey = process.env.NEXT_PUBLIC_MISTRAL_API_KEY;
 
   useEffect(() => {
     if (!input) return;
-  
+
+    const timeoutId = setTimeout(() => {
+      callAI();
+    }, 1000);
+
     const callAI = async () => {
       try {
+        setLoading(true);
         if (!apiKey) throw new Error("API key missing");
-  
+
         const res = await axios.post(
           "https://api.mistral.ai/v1/chat/completions",
           {
@@ -96,22 +102,27 @@ const Ai = ({ input, onResponse }: AiProps) => {
             },
           }
         );
-  
+
         const raw = res.data.choices[0].message.content;
+        console.log(raw);
         setResult(raw);
         if (onResponse) onResponse(raw);
       } catch (error) {
         console.error("AI Error:", error);
         setResult({ error: "Failed to fetch AI response" });
+        if (onResponse) onResponse("⚠️ AI service is currently overloaded. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
-  
-    callAI();
+
+    return () => clearTimeout(timeoutId);
   }, [input]);
-  
 
   return null;
 };
 
 export default Ai;
+
+  
 // }

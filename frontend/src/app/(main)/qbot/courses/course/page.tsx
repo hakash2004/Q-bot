@@ -4,6 +4,8 @@ import "./course.scss";
 import { useState } from "react";
 import Ai from "@/app/api/ai/ai";
 import ReactMarkdown from "react-markdown";
+import { Mosaic } from "react-loading-indicators";
+import remarkGfm from "remark-gfm";
 
 export default function CoursePage() {
   const data = {
@@ -394,6 +396,8 @@ export default function CoursePage() {
     ],
   };
 
+  // console.log(data);
+
   // variables
   const currentCourse = data.activeCourses[0];
   const [currentUnit, setCurrentUnit] = useState(currentCourse.units[0]);
@@ -408,7 +412,14 @@ export default function CoursePage() {
 
   const [unitExpand, setUnitExpand] = useState(currentUnit.unitName);
 
-  const [sourceData, setSourceData] = useState("");
+  const [sourceData, setSourceData] = useState('');
+
+
+  // mcq variables
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   //render functions
   const renderTasks = (tasks: any, taskType: string) => {
@@ -506,6 +517,7 @@ export default function CoursePage() {
         unit.modules[0]?.tests[0]
     );
     setCurrentSourcePage(0);
+    setSourceData("");
   };
 
   // module selection
@@ -515,6 +527,7 @@ export default function CoursePage() {
     //   module?.sources[0] || module?.assignments[0] || module?.tests[0]
     // );
     // setCurrentSourcePage(0);
+    setSourceData("");
   };
 
   // task selection
@@ -522,9 +535,11 @@ export default function CoursePage() {
     setCurrentTaskType(type);
     setCurrentTask(task);
     setCurrentSourcePage(0);
+    setSourceData("");
   };
   // others
   const handleNextOnClick = () => {
+    setSourceData("");
     if (
       currentTaskType === "SOURCE" &&
       Array.isArray(currentTask?.source) &&
@@ -533,65 +548,97 @@ export default function CoursePage() {
       setCurrentSourcePage((prev) => prev + 1);
       return;
     }
-    // const allTasks = [
-    //   ...(currentModule.sources || []).map((task: any) => ({ ...task, type: "SOURCE" })),
-    //   ...(currentModule.assignments || []).map((task: any) => ({ ...task, type: "ASSIGNMENT" })),
-    //   ...(currentModule.tests || []).map((task: any) => ({ ...task, type: "TEST" })),
-    // ];
-
-    // const currentIndex = allTasks.findIndex((t) => t.taskName === currentTask.taskName && t.type === currentTaskType);
-
-    // if (currentIndex !== -1 && currentIndex + 1 < allTasks.length) {
-    //   const nextTask = allTasks[currentIndex + 1];
-    //   setCurrentTaskType(nextTask.type);
-    //   setCurrentTask(nextTask);
-    //   setCurrentSourcePage(0);
-    //   return;
-    // }
-
-    // const currentModuleIndex = currentUnit.modules.findIndex((mod: any) => mod.moduleName === currentModule.moduleName);
-    // if (currentModuleIndex !== -1 && currentModuleIndex + 1 < currentUnit.modules.length) {
-    //   const nextModule = currentUnit.modules[currentModuleIndex + 1];
-    //   setCurrentModule(nextModule);
-    //   const firstTask =
-    //     nextModule.sources?.[0] || nextModule.assignments?.[0] || nextModule.tests?.[0];
-    //   const firstType =
-    //     nextModule.sources?.[0] ? "SOURCE" :
-    //     nextModule.assignments?.[0] ? "ASSIGNMENT" :
-    //     "TEST";
-    //   setCurrentTaskType(firstType);
-    //   setCurrentTask(firstTask);
-    //   setCurrentSourcePage(0);
-    //   return;
-    // }
-
-    // const currentUnitIndex = currentCourse.units.findIndex((u: any) => u.unitName === currentUnit.unitName);
-    // if (currentUnitIndex !== -1 && currentUnitIndex + 1 < currentCourse.units.length) {
-    //   const nextUnit = currentCourse.units[currentUnitIndex + 1];
-    //   setCurrentUnit(nextUnit);
-    //   setUnitExpand(nextUnit.unitName); // expand next unit
-    //   const firstModule = nextUnit.modules[0];
-    //   const firstTask =
-    //     firstModule.sources?.[0] || firstModule.assignments?.[0] || firstModule.tests?.[0];
-    //   const firstType =
-    //     firstModule.sources?.[0] ? "SOURCE" :
-    //     firstModule.assignments?.[0] ? "ASSIGNMENT" :
-    //     "TEST";
-    //   setCurrentModule(firstModule);
-    //   setCurrentTaskType(firstType);
-    //   setCurrentTask(firstTask);
-    //   setCurrentSourcePage(0);
-    //   return;
-    // }
-    // alert("🎉 You've completed all tasks!");
   };
+
+  // instructions
+
+  const generateAIContent = (task: any, taskType: string) => {
+    let instruction = "";
+
+    if (taskType === "ASSIGNMENT") {
+      instruction = `You are an AI that generates assignments based on the topic: ${task.taskName}. Provide a detailed assignment with clear instructions, guidelines, and resources if applicable.`;
+    } else if (taskType === "TEST") {
+      instruction = `You are an AI that generates a quiz for the topic: ${task.taskName}. Create a multiple-choice test with 20 questions and 4 options, indicating the correct answer.`;
+    } else if (taskType === "SOURCE") {
+      instruction =  `You are an AI that teaches the unit on this topic: ${task.source[currentSourcePage]}. 
+      Provide detailed teaching material with clear explanations (at least 2000 words).add resource links at the end`
+      
+      // you are response should be strictly an object in this format: {title : ${task.source[currentSourcePage]},content: "..... all texts", resources:[...all links]}
+    }
+
+
+    return instruction;
+  };
+
+  // ai response
+  const handleTaskContentGeneration = (task: any, taskType: string) => {
+    const instruction = generateAIContent(task, taskType);
+    let aioutput; 
+    return (
+      <Ai
+      input={instruction}
+      onResponse={(res) => {
+          // console.log(aioutput);
+          // console.log(res);
+          setSourceData(res);
+        }}
+      />
+    );
+  };
+
+  // mcq
+  // const renderMCQ = () => {
+  //   const currentQuestion = currentTask.test.questions[currentQuestionIndex];
+
+  //   return (
+  //     <div className="mcq">
+  //       <div className="question">{currentQuestion.question}</div>
+  //       <div className="options">
+  //         {currentQuestion.options.map((option, index) => (
+  //           <div
+  //             key={index}
+  //             className={`option ${selectedAnswer === option ? (isCorrect ? "correct" : "incorrect") : ""}`}
+  //             onClick={() => handleAnswerSelection(option)}
+  //           >
+  //             {option}
+  //           </div>
+  //         ))}
+  //       </div>
+
+  //       {showFeedback && (
+  //         <div className={`feedback ${isCorrect ? "correct" : "incorrect"}`}>
+  //           {isCorrect ? "Correct!" : "Incorrect. The correct answer is: " + currentQuestion.correctAnswer}
+  //         </div>
+  //       )}
+
+  //       <button className="next-button" onClick={handleNextQuestion}>
+  //         {currentQuestionIndex < currentTask.test.questions.length - 1 ? "Next" : "Finish"}
+  //       </button>
+  //     </div>
+  //   );
+  // };
+  // const handleAnswerSelection = (answer: string) => {
+  //   setSelectedAnswer(answer);
+  //   const isAnswerCorrect = answer === currentTask.test.questions[currentQuestionIndex].correctAnswer;
+  //   setIsCorrect(isAnswerCorrect);
+  //   setShowFeedback(true);
+  // };
+
+  // const handleNextQuestion = () => {
+  //   if (currentQuestionIndex < currentTask.test.questions.length - 1) {
+  //     setCurrentQuestionIndex(currentQuestionIndex + 1);
+  //     setSelectedAnswer(null);
+  //     setIsCorrect(null);
+  //     setShowFeedback(false);
+  //   } else {
+  //     // If all questions are answered, show some message or move to next task
+  //     alert("You have completed the quiz!");
+  //   }
+  // };
 
   return (
     <>
-      <Ai
-        input={`you are a aichat bot in a project , teach the user about the provided topic : ${currentTask.source[currentSourcePage]}`}
-        onResponse={(res) => setSourceData(res)}
-      />
+      {handleTaskContentGeneration(currentTask, currentTaskType)}
       <div className="course-container">
         <div className="course-wrapper">
           <div className="course-head">
@@ -610,14 +657,32 @@ export default function CoursePage() {
                 </div>
                 <div className="page-topic">{currentTask.taskName}</div>
               </div>
-              <div className="page-content"><ReactMarkdown>{sourceData}</ReactMarkdown></div>
+              <div className="page-content">
+                {sourceData === "" ? (
+                  <div className="loading">
+                    <Mosaic
+                      color="#e9e9e9"
+                      size="medium"
+                      text=""
+                      textColor=""
+                    />
+                  </div>
+                ) : (
+                  <div className="data">
+                    <ReactMarkdown
+                      children={sourceData}
+                      remarkPlugins={[remarkGfm]}
+                    />
+                  </div>
+                )}
+              </div>
               <div className="page-footer">
                 {currentTaskType == "SOURCE" && (
                   <div className="page-count">
                     <div className="of">{currentSourcePage + 1}</div>
                     <div className="bar">/</div>
                     <div className="total">
-                      {(currentTask.source?.length ?? 0) + 1}
+                      {currentTask.source?.length ?? 0}
                     </div>
                   </div>
                 )}
