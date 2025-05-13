@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import "./upskill.scss";
 import Ai from "@/app/api/ai/ai";
@@ -37,6 +37,7 @@ export default function UpSkill() {
   const handleCardOnClick = (courseData: any) => {
     setSelectedCourse(courseData);
     setShowCoursePage(true);
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   };
 
   const filteredCards = cards.filter((card) =>
@@ -59,65 +60,63 @@ export default function UpSkill() {
   }, [aiResponse]);
 
   return (
-    <div className="upskill-container">
-      <div className="filter-bar">
-        <input
-          type="text"
-          placeholder="Filter Cards"
-          value={filterText}
-          onChange={(e) => setFilterText(e.target.value)}
-        />
-      </div>
+    <div className="upskill-container  scroll-container ">
+      <div className="course-list">
 
-      <div className="cards-container">
-        {filteredCards.map((card, index) => (
-          <div
-            key={index}
-            className="card"
-            onClick={() => handleCardOnClick(card.aiResponse)} 
-          >
-            <div className="card-image">
-              {card.aiResponse ? (
-                <div className="ai-response-container">
-                  <div className="ai-response">
-                    {JSON.stringify(card.aiResponse, null, 2)}
-                  </div>
-                </div>
-              ) : (
-                <div className="no-image">No Image</div>
-              )}
-            </div>
-            <div className="card-text">
-              {card.text}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="plus-icon" onClick={() => setIsModalOpen(true)}>
-        <span>+</span>
-      </div>
-
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <input
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Enter text"
-            />
-            <button onClick={handleAddCard}>Add Card</button>
-            <button onClick={() => setIsModalOpen(false)}>Close</button>
-          </div>
+        <div className="filter-bar">
+          <input
+            type="text"
+            placeholder="Filter Cards"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+          />
         </div>
-      )}
+        <div className="plus-icon" onClick={() => setIsModalOpen(true)}>
+          <span>+</span>
+        </div>
+        <div className="cards-container">
+          {filteredCards.map((card, index) => (
+            <div
+              key={index}
+              className="card"
+              onClick={() => handleCardOnClick(card.aiResponse)}
+            >
+              <div className="card-image">
+                {card.aiResponse ? (
+                  <div className="ai-response-container">
+                    <div className="ai-response">
+                      {JSON.stringify(card.aiResponse, null, 2)}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="no-image">No Image</div>
+                )}
+              </div>
+              <div className="card-text">{card.text}</div>
+            </div>
+          ))}
+        </div>
 
-      {inputText && !aiResponse && (
-        <Ai
-          input={`Generate a course structure for "{title: '${inputText}'}" strictly in the following format:
+        {isModalOpen && (
+          <div className="modal">
+            <div className="modal-content">
+              <input
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="Enter text"
+              />
+              <button onClick={handleAddCard}>Add Course</button>
+              <button onClick={() => setIsModalOpen(false)}>Close</button>
+            </div>
+          </div>
+        )}
+
+        {inputText && !aiResponse && (
+          <Ai
+            input={`Generate a course structure for "{title: '${inputText}'}" strictly in the following format:
           {
-            title: "Course Name",
+            courseName: "Course Name",
             units: [
               {
                 unitName: "Unit 1 Name",
@@ -153,29 +152,29 @@ export default function UpSkill() {
               }
             ]
           } 
-            IMPORTANT ->you are chatput or output should only have the object starts with { and ends }. no other word
+            IMPORTANT ->you are chatput or output should only have the object starts with { and ends }. no other word. minimum 5 units, 4 modules for each unit.
           Ensure the course includes all relevant units, modules, tasks, assignments, and tests that are required for a comprehensive course.
           `}
-          onResponse={(res) => {
-            try {
+            onResponse={(res) => {
+              try {
                 // Fix missing quotes around keys
                 const fixed = res.replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":');
-                
+
                 const parsed = JSON.parse(fixed);
                 setAiResponse(parsed);
               } catch (error) {
                 console.error("Failed to parse AI response:", error);
               }
-          }}
-        />
-      )}
+            }}
+          />
+        )}
+      </div>
 
-      {/* Show CoursePage if showCoursePage is true */}
-
-      
       {showCoursePage && selectedCourse && (
-         <CourseGenerator course={selectedCourse} /> 
-      )} 
+        <div className="course">
+          <CourseGenerator course={selectedCourse} />
+        </div>
+      )}
     </div>
   );
 }

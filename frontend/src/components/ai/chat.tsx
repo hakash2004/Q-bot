@@ -8,7 +8,9 @@ import Ai from "@/app/api/ai/ai";
 
 export default function AiChat() {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
+  const [messages, setMessages] = useState<{ sender: string; text: string }[]>(
+    []
+  );
   const [loading, setLoading] = useState(false);
   const [aiInput, setAiInput] = useState<string | null>(null);
   const chatRef = useRef<HTMLDivElement | null>(null);
@@ -21,20 +23,33 @@ export default function AiChat() {
     setMessages(newMessages);
     setMessage("");
     setLoading(true);
-    responseHandled.current = false; 
+    responseHandled.current = false;
     try {
-      const studentId = "S1002";
-      const studentResponse = await fetch(`http://localhost:5000/api/students/${studentId}`);
+      const studentId = "S1007";
+      const studentResponse = await fetch(
+        `http://localhost:5000/api/students/${studentId}`
+      );
 
       if (!studentResponse.ok) {
-        throw new Error(`Student fetch failed! Status: ${studentResponse.status}`);
+        throw new Error(
+          `Student fetch failed! Status: ${studentResponse.status}`
+        );
       }
 
       const studentDetail = await studentResponse.json();
+      const studentInfo = `Student Name: ${studentDetail.name.first} ${studentDetail.name.last}GPA: ${studentDetail.gpa}Courses: ${studentDetail.courses
+        .map((course: any) => course.course_name)
+        .join(", ")}
+`.trim();
 
-      const studentInfo = `Student Name: ${studentDetail.name.first} ${studentDetail.name.last}\nGPA: ${studentDetail.gpa}\nCourses: ${studentDetail.courses.map((course: any) => course.course_name).join(", ")}`;
+      const chatbotPrompt = `${message}
 
-      const chatbotPrompt = `${message}\n\nRelevant Student Info:\n${studentInfo}`;
+Relevant Student Info:
+${studentInfo}`;
+
+      // const studentInfo = `Student Name: ${studentDetail.name.first} ${studentDetail.name.last}\nGPA: ${studentDetail.gpa}\nCourses: ${studentDetail.courses.map((course: any) => course.course_name).join(", ")}`;
+
+      // const chatbotPrompt = `${message}\n\nRelevant Student Info:\n${studentInfo}`;
 
       setAiInput(chatbotPrompt);
     } catch (error) {

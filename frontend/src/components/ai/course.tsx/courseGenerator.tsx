@@ -12,6 +12,8 @@ interface CourseProps {
 }
 
 const CourseGenerator: React.FC<CourseProps> = ({ course }) => {
+
+  
   const [currentUnit, setCurrentUnit] = useState(() => course?.units?.[0] ?? {});
   const [currentModule, setCurrentModule] = useState(() => currentUnit?.modules?.[0] ?? {});
   const [currentTask, setCurrentTask] = useState(() =>
@@ -77,7 +79,7 @@ const CourseGenerator: React.FC<CourseProps> = ({ course }) => {
   const renderSidebar = () => {
     return (
       <>
-        <div className="elements">
+        <div className="elements  scroll-container">
           {course?.units?.map((e: any, index: number) => (
             <div className="element" key={`${e.unitName}-${index}`}>
               <div
@@ -90,7 +92,7 @@ const CourseGenerator: React.FC<CourseProps> = ({ course }) => {
                 </div>
               </div>
               {unitExpand === e.unitName && (
-                <div className="body">
+                <div className="body scroll-container ">
                   <div className="modules">{renderModules(e.modules)}</div>
                 </div>
               )}
@@ -183,7 +185,7 @@ const CourseGenerator: React.FC<CourseProps> = ({ course }) => {
           </div>
 
           <div className="course-body">
-            <div className="course-sidebar">{renderSidebar()}</div>
+            <div className="course-sidebar scroll-container ">{renderSidebar()}</div>
             <div className="course-content">
               <div className="page-header">
                 <div className="slug">
@@ -193,7 +195,7 @@ const CourseGenerator: React.FC<CourseProps> = ({ course }) => {
                 </div>
                 <div className="page-topic">{currentTask?.taskName ?? ""}</div>
               </div>
-              <div className="page-content">
+              <div className="page-content scroll-container">
                 {sourceData === "" ? (
                   <div className="loading">
                     <Mosaic color="#e9e9e9" size="medium" text="" textColor="" />
@@ -202,6 +204,25 @@ const CourseGenerator: React.FC<CourseProps> = ({ course }) => {
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
                     {sourceData}
                   </ReactMarkdown>
+                )}
+              </div>
+              <div className="page-footer">
+                {currentTaskType == "SOURCE" && (
+                  <div className="page-count">
+                    <div className="of">{currentSourcePage + 1}</div>
+                    <div className="bar">/</div>
+                    <div className="total">
+                      {currentTask.source?.length ?? 0}
+                    </div>
+                  </div>
+                )}
+                {currentSourcePage !== (currentTask.source?.length ?? 0) && (
+                  <div
+                    className="page-next"
+                    onClick={() => handleNextOnClick()}
+                  >
+                    NEXT
+                  </div>
                 )}
               </div>
             </div>

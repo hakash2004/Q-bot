@@ -3,7 +3,17 @@
   margin: 0;
   box-sizing: border-box;
 }
+.scroll-container {
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
 
+/* Chrome, Safari, and other WebKit browsers */
+.scroll-container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
 
 .course-container {
   width: 100%;
