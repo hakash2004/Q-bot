@@ -24,7 +24,7 @@
 
     .course-status {
       grid-row: 1 / 6;
-      grid-column: 1/9;
+      grid-column: 1/10;
       height: 100%;
       width: 100%;
       padding: 10px;
@@ -127,10 +127,11 @@
       }
     }
     .calender {
-      grid-column: 9 / 13;
-      grid-row: 1 / 10;
+      grid-column: 10 / 13;
+      grid-row: 1 / 9;
       width: 100%;
       height: 100%;
+      padding: 10px;
       background-color: white;
 
       $primary-color: #2563eb;
@@ -242,10 +243,9 @@
         }
       }
     }
-
     .active {
       grid-row: 6 / 16;
-      grid-column: 1 / 9;
+      grid-column: 1 / 10;
       width: 100%;
       height: 100%;
 
@@ -474,8 +474,8 @@
       }
     }
     .submission-tracker {
-      grid-row: 10 / 16;
-      grid-column: 9 / 13;
+      grid-row: 9 / 16;
+      grid-column: 10 / 13;
       width: 100%;
       height: 100%;
       background-color: white;

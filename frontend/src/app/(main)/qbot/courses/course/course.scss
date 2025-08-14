@@ -9,7 +9,6 @@
   -ms-overflow-style: none; /* IE and Edge */
 }
 
-/* Chrome, Safari, and other WebKit browsers */
 .scroll-container::-webkit-scrollbar {
   width: 0;
   height: 0;
@@ -69,6 +68,7 @@
         background-color: rgb(255, 255, 255);
         padding: 5px;
         box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+        overflow-y: scroll;
 
         .elements {
           width: 100%;
@@ -76,6 +76,7 @@
           display: flex;
           flex-direction: column;
           gap: 10px;
+
           .element {
             width: 100%;
 
@@ -95,6 +96,11 @@
               //   padding: 10px;
               overflow-x: hidden;
               overflow-y: scroll;
+              overflow: auto;
+              scrollbar-width: none; /* Firefox */
+              -ms-overflow-style: none;
+
+              
 
               .modules {
                 width: 100%;
@@ -231,26 +237,30 @@
           overflow-y: scroll;
           // box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
 
-          .loading{
+          .loading {
             width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
           }
-          .data{
+          .data {
             width: 100%;
             height: 100%;
             word-spacing: 7px;
 
-            h1, h2, h3 , h4, h5{
+            h1,
+            h2,
+            h3,
+            h4,
+            h5 {
               margin-block: 20px;
             }
-            strong{
+            strong {
               margin-block: 20px;
             }
 
-            li{
+            li {
               margin-block: 15px;
             }
 
@@ -276,7 +286,7 @@
                   }
                 }
               }
-            
+
               .feedback {
                 margin-top: 10px;
                 font-size: 16px;
@@ -287,7 +297,7 @@
                   color: #f44336;
                 }
               }
-            
+
               .next-button {
                 margin-top: 20px;
                 padding: 10px;
@@ -301,7 +311,6 @@
                 }
               }
             }
-
           }
         }
         .page-footer {

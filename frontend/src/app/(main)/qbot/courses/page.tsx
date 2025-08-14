@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { LineProgressBar } from "@/components/progressBar";
 import "./courses.scss";
 import { ArrowUpDown, Search } from "lucide-react";
@@ -13,380 +13,417 @@ export default function Courses() {
   //     query: { data: JSON.stringify(course) },
   //   });
   // };
-    const handleCourseClick = () => {
+  const handleCourseClick = () => {
     router.push("/qbot/courses/course");
   };
 
   // data
-  const data = {
-    activeCourses: [
-      {
-        courseName: "Introduction to Web Development",
-        courseIcon: "🖥️",
-        date: {
-          start: "2025-02-01",
-          end: "2025-04-30",
-        },
-        progress: "60%",
-        status: "started",
-        units: [
-          {
-            unitName: "Frontend Basics",
-            modules: [
-              {
-                moduleName: "HTML & CSS",
-                sources: [
-                  "Introduction to HTML",
-                  "HTML Elements and Structure",
-                  "Styling with CSS",
-                  "Flexbox and Grid Layouts",
-                ],
-                assignment: [
-                  {
-                    title: "Build a Personal Website",
-                    dueDate: "2025-03-01",
-                    submitted: true,
-                  },
-                ],
-                test: [
-                  {
-                    title: "HTML & CSS Quiz",
-                    score: 85,
-                    maxScore: 100,
-                  },
-                ],
-              },
-              {
-                moduleName: "JavaScript Essentials",
-                sources: [
-                  "JavaScript Basics and Syntax",
-                  "Working with Variables and Data Types",
-                  "Control Structures and Loops",
-                  "Functions and Events",
-                ],
-                assignment: [
-                  {
-                    title: "DOM Manipulation Task",
-                    dueDate: "2025-03-15",
-                    submitted: false,
-                  },
-                ],
-                test: [
-                  {
-                    title: "JavaScript Basics Test",
-                    score: 72,
-                    maxScore: 100,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            unitName: "Version Control",
-            modules: [
-              {
-                moduleName: "Git & GitHub",
-                sources: [
-                  "Introduction to Git and Version Control",
-                  "Creating and Cloning Repositories",
-                  "Committing and Branching",
-                  "Collaboration with GitHub",
-                ],
-                assignment: [
-                  {
-                    title: "Create and Push a Repository",
-                    dueDate: "2025-04-01",
-                    submitted: true,
-                  },
-                ],
-                test: [
-                  {
-                    title: "Git Knowledge Test",
-                    score: 90,
-                    maxScore: 100,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+const data = {
+  activeCourses: [
+    {
+      courseName: "Introduction to Web Development",
+      courseIcon: "🖥️",
+      category: "Frontend Development",
+      tags: ["HTML", "CSS", "JavaScript", "Git"],
+      date: {
+        start: "2025-02-01",
+        end: "2025-04-30",
       },
-      {
-        courseName: "React for Beginners",
-        courseIcon: "⚛️",
-        date: {
-          start: "2025-03-10",
-          end: "2025-05-20",
+      progress: "60%",
+      status: "started",
+      units: [
+        {
+          unitName: "Frontend Basics",
+          modules: [
+            {
+              moduleName: "HTML & CSS",
+              sources: [
+                "Introduction to HTML",
+                "HTML Elements and Structure",
+                "Styling with CSS",
+                "Flexbox and Grid Layouts",
+              ],
+              assignment: [
+                {
+                  title: "Build a Personal Website",
+                  dueDate: "2025-03-01",
+                  submitted: true,
+                },
+              ],
+              test: [
+                {
+                  title: "HTML & CSS Quiz",
+                  score: 85,
+                  maxScore: 100,
+                },
+              ],
+            },
+            {
+              moduleName: "JavaScript Essentials",
+              sources: [
+                "JavaScript Basics and Syntax",
+                "Working with Variables and Data Types",
+                "Control Structures and Loops",
+                "Functions and Events",
+              ],
+              assignment: [
+                {
+                  title: "DOM Manipulation Task",
+                  dueDate: "2025-03-15",
+                  submitted: false,
+                },
+              ],
+              test: [
+                {
+                  title: "JavaScript Basics Test",
+                  score: 72,
+                  maxScore: 100,
+                },
+              ],
+            },
+          ],
         },
-        progress: "30%",
-        status: "started",
-        units: [
-          {
-            unitName: "React Basics",
-            modules: [
-              {
-                moduleName: "JSX & Components",
-                sources: [
-                  "Understanding JSX",
-                  "Creating Components",
-                  "Component Props",
-                  "Component Lifecycle",
-                ],
-                assignment: [
-                  {
-                    title: "Build a Simple React App",
-                    dueDate: "2025-04-01",
-                    submitted: true,
-                  },
-                ],
-                test: [
-                  {
-                    title: "React Basics Quiz",
-                    score: 80,
-                    maxScore: 100,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        courseName: "Responsive Design & Accessibility",
-        courseIcon: "📱",
-        date: {
-          start: "2025-03-20",
-          end: "2025-05-25",
+        {
+          unitName: "Version Control",
+          modules: [
+            {
+              moduleName: "Git & GitHub",
+              sources: [
+                "Introduction to Git and Version Control",
+                "Creating and Cloning Repositories",
+                "Committing and Branching",
+                "Collaboration with GitHub",
+              ],
+              assignment: [
+                {
+                  title: "Create and Push a Repository",
+                  dueDate: "2025-04-01",
+                  submitted: true,
+                },
+              ],
+              test: [
+                {
+                  title: "Git Knowledge Test",
+                  score: 90,
+                  maxScore: 100,
+                },
+              ],
+            },
+          ],
         },
-        progress: "20%",
-        status: "started",
-        units: [
-          {
-            unitName: "Responsive Techniques",
-            modules: [
-              {
-                moduleName: "Media Queries & Flexbox",
-                sources: [
-                  "Using Media Queries",
-                  "Responsive Flexbox Layouts",
-                  "Mobile-First Design",
-                  "Fluid Typography & Images",
-                ],
-                assignment: [
-                  {
-                    title: "Create a Responsive Landing Page",
-                    dueDate: "2025-04-10",
-                    submitted: false,
-                  },
-                ],
-                test: [],
-              },
-            ],
-          },
-        ],
+      ],
+    },
+    {
+      courseName: "React for Beginners",
+      courseIcon: "⚛️",
+      category: "Frontend Framework",
+      tags: ["React", "JSX", "Hooks"],
+      date: {
+        start: "2025-03-10",
+        end: "2025-05-20",
       },
-      {
-        courseName: "React for Beginners",
-        courseIcon: "⚛️",
-        date: {
-          start: "2025-03-10",
-          end: "2025-05-20",
+      progress: "30%",
+      status: "started",
+      units: [
+        {
+          unitName: "React Basics",
+          modules: [
+            {
+              moduleName: "JSX & Components",
+              sources: [
+                "Understanding JSX",
+                "Creating Components",
+                "Component Props",
+                "Component Lifecycle",
+              ],
+              assignment: [
+                {
+                  title: "Build a Simple React App",
+                  dueDate: "2025-04-01",
+                  submitted: true,
+                },
+              ],
+              test: [
+                {
+                  title: "React Basics Quiz",
+                  score: 80,
+                  maxScore: 100,
+                },
+              ],
+            },
+          ],
         },
-        progress: "30%",
-        status: "started",
-        units: [
-          {
-            unitName: "React Basics",
-            modules: [
-              {
-                moduleName: "JSX & Components",
-                sources: [
-                  "Understanding JSX",
-                  "Creating Components",
-                  "Component Props",
-                  "Component Lifecycle",
-                ],
-                assignment: [
-                  {
-                    title: "Build a Simple React App",
-                    dueDate: "2025-04-01",
-                    submitted: true,
-                  },
-                ],
-                test: [
-                  {
-                    title: "React Basics Quiz",
-                    score: 80,
-                    maxScore: 100,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+      ],
+    },
+    {
+      courseName: "Responsive Design & Accessibility",
+      courseIcon: "📱",
+      category: "Design",
+      tags: ["Responsive", "Accessibility", "CSS"],
+      date: {
+        start: "2025-03-20",
+        end: "2025-05-25",
       },
-      {
-        courseName: "React for Beginners",
-        courseIcon: "⚛️",
-        date: {
-          start: "2025-03-10",
-          end: "2025-05-20",
+      progress: "20%",
+      status: "started",
+      units: [
+        {
+          unitName: "Responsive Techniques",
+          modules: [
+            {
+              moduleName: "Media Queries & Flexbox",
+              sources: [
+                "Using Media Queries",
+                "Responsive Flexbox Layouts",
+                "Mobile-First Design",
+                "Fluid Typography & Images",
+              ],
+              assignment: [
+                {
+                  title: "Create a Responsive Landing Page",
+                  dueDate: "2025-04-10",
+                  submitted: false,
+                },
+              ],
+              test: [],
+            },
+          ],
         },
-        progress: "30%",
-        status: "started",
-        units: [
-          {
-            unitName: "React Basics",
-            modules: [
-              {
-                moduleName: "JSX & Components",
-                sources: [
-                  "Understanding JSX",
-                  "Creating Components",
-                  "Component Props",
-                  "Component Lifecycle",
-                ],
-                assignment: [
-                  {
-                    title: "Build a Simple React App",
-                    dueDate: "2025-04-01",
-                    submitted: true,
-                  },
-                ],
-                test: [
-                  {
-                    title: "React Basics Quiz",
-                    score: 80,
-                    maxScore: 100,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+      ],
+    },
+    {
+      courseName: "React for Beginners",
+      courseIcon: "⚛️",
+      category: "Frontend Framework",
+      tags: ["React", "JSX", "Hooks"],
+      date: {
+        start: "2025-03-10",
+        end: "2025-05-20",
       },
-    ],
+      progress: "30%",
+      status: "started",
+      units: [
+        {
+          unitName: "React Basics",
+          modules: [
+            {
+              moduleName: "JSX & Components",
+              sources: [
+                "Understanding JSX",
+                "Creating Components",
+                "Component Props",
+                "Component Lifecycle",
+              ],
+              assignment: [
+                {
+                  title: "Build a Simple React App",
+                  dueDate: "2025-04-01",
+                  submitted: true,
+                },
+              ],
+              test: [
+                {
+                  title: "React Basics Quiz",
+                  score: 80,
+                  maxScore: 100,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      courseName: "React for Beginners",
+      courseIcon: "⚛️",
+      category: "Frontend Framework",
+      tags: ["React", "JSX", "Hooks"],
+      date: {
+        start: "2025-03-10",
+        end: "2025-05-20",
+      },
+      progress: "30%",
+      status: "started",
+      units: [
+        {
+          unitName: "React Basics",
+          modules: [
+            {
+              moduleName: "JSX & Components",
+              sources: [
+                "Understanding JSX",
+                "Creating Components",
+                "Component Props",
+                "Component Lifecycle",
+              ],
+              assignment: [
+                {
+                  title: "Build a Simple React App",
+                  dueDate: "2025-04-01",
+                  submitted: true,
+                },
+              ],
+              test: [
+                {
+                  title: "React Basics Quiz",
+                  score: 80,
+                  maxScore: 100,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
 
-    allCourses: [
-      {
-        courseName: "Introduction to Web Development",
-        courseIcon: "🖥️",
-        date: {
-          start: "2025-02-01",
-          end: "2025-04-30",
-        },
-        status: "started",
+  allCourses: [
+    {
+      courseName: "Introduction to Web Development",
+      courseIcon: "🖥️",
+      category: "Frontend Development",
+      tags: ["HTML", "CSS", "JavaScript", "Git"],
+      date: {
+        start: "2025-02-01",
+        end: "2025-04-30",
       },
-      {
-        courseName: "React for Beginners",
-        courseIcon: "⚛️",
-        date: {
-          start: "2025-03-10",
-          end: "2025-05-20",
-        },
-        status: "started",
+      status: "started",
+    },
+    {
+      courseName: "React for Beginners",
+      courseIcon: "⚛️",
+      category: "Frontend Framework",
+      tags: ["React", "JSX", "Hooks"],
+      date: {
+        start: "2025-03-10",
+        end: "2025-05-20",
       },
-      {
-        courseName: "Introduction to Web Development",
-        courseIcon: "🖥️",
-        date: {
-          start: "2025-02-01",
-          end: "2025-04-30",
-        },
-        status: "started",
+      status: "started",
+    },
+    {
+      courseName: "Introduction to Web Development",
+      courseIcon: "🖥️",
+      category: "Frontend Development",
+      tags: ["HTML", "CSS", "JavaScript", "Git"],
+      date: {
+        start: "2025-02-01",
+        end: "2025-04-30",
       },
-      {
-        courseName: "Responsive Design & Accessibility",
-        courseIcon: "📱",
-        date: {
-          start: "2025-03-20",
-          end: "2025-05-25",
-        },
-        status: "started",
+      status: "started",
+    },
+    {
+      courseName: "Responsive Design & Accessibility",
+      courseIcon: "📱",
+      category: "Design",
+      tags: ["Responsive", "Accessibility", "CSS"],
+      date: {
+        start: "2025-03-20",
+        end: "2025-05-25",
       },
-      {
-        courseName: "Backend Development with Node.js",
-        courseIcon: "🛠️",
-        date: {
-          start: "2025-06-01",
-          end: "2025-08-01",
-        },
-        status: "not started",
+      status: "started",
+    },
+    {
+      courseName: "Backend Development with Node.js",
+      courseIcon: "🛠️",
+      category: "Backend Development",
+      tags: ["Node.js", "Express", "MongoDB"],
+      date: {
+        start: "2025-06-01",
+        end: "2025-08-01",
       },
-      {
-        courseName: "Final Portfolio Project",
-        courseIcon: "🎓",
-        date: {
-          start: "2024-11-01",
-          end: "2025-01-15",
-        },
-        status: "completed",
+      status: "not started",
+    },
+    {
+      courseName: "Final Portfolio Project",
+      courseIcon: "🎓",
+      category: "Capstone",
+      tags: ["Portfolio", "Showcase", "Final Project"],
+      date: {
+        start: "2024-11-01",
+        end: "2025-01-15",
       },
-      {
-        courseName: "Final Portfolio Project",
-        courseIcon: "🎓",
-        date: {
-          start: "2024-11-01",
-          end: "2025-01-15",
-        },
-        status: "completed",
+      status: "completed",
+    },
+    {
+      courseName: "Final Portfolio Project",
+      courseIcon: "🎓",
+      category: "Capstone",
+      tags: ["Portfolio", "Showcase", "Final Project"],
+      date: {
+        start: "2024-11-01",
+        end: "2025-01-15",
       },
-      {
-        courseName: "Final Portfolio Project",
-        courseIcon: "🎓",
-        date: {
-          start: "2024-11-01",
-          end: "2025-01-15",
-        },
-        status: "completed",
+      status: "completed",
+    },
+    {
+      courseName: "Final Portfolio Project",
+      courseIcon: "🎓",
+      category: "Capstone",
+      tags: ["Portfolio", "Showcase", "Final Project"],
+      date: {
+        start: "2024-11-01",
+        end: "2025-01-15",
       },
-      {
-        courseName: "Final Portfolio Project",
-        courseIcon: "🎓",
-        date: {
-          start: "2024-11-01",
-          end: "2025-01-15",
-        },
-        status: "completed",
+      status: "completed",
+    },
+    {
+      courseName: "Final Portfolio Project",
+      courseIcon: "🎓",
+      category: "Capstone",
+      tags: ["Portfolio", "Showcase", "Final Project"],
+      date: {
+        start: "2024-11-01",
+        end: "2025-01-15",
       },
-      {
-        courseName: "Final Portfolio Project",
-        courseIcon: "🎓",
-        date: {
-          start: "2024-11-01",
-          end: "2025-01-15",
-        },
-        status: "completed",
+      status: "completed",
+    },
+    {
+      courseName: "Final Portfolio Project",
+      courseIcon: "🎓",
+      category: "Capstone",
+      tags: ["Portfolio", "Showcase", "Final Project"],
+      date: {
+        start: "2024-11-01",
+        end: "2025-01-15",
       },
-      {
-        courseName: "Final Portfolio Project",
-        courseIcon: "🎓",
-        date: {
-          start: "2024-11-01",
-          end: "2025-01-15",
-        },
-        status: "completed",
+      status: "completed",
+    },
+    {
+      courseName: "Final Portfolio Project",
+      courseIcon: "🎓",
+      category: "Capstone",
+      tags: ["Portfolio", "Showcase", "Final Project"],
+      date: {
+        start: "2024-11-01",
+        end: "2025-01-15",
       },
-      {
-        courseName: "Final Portfolio Project",
-        courseIcon: "🎓",
-        date: {
-          start: "2024-11-01",
-          end: "2025-01-15",
-        },
-        status: "completed",
+      status: "completed",
+    },
+    {
+      courseName: "Final Portfolio Project",
+      courseIcon: "🎓",
+      category: "Capstone",
+      tags: ["Portfolio", "Showcase", "Final Project"],
+      date: {
+        start: "2024-11-01",
+        end: "2025-01-15",
       },
-      {
-        courseName: "Final Portfolio Project",
-        courseIcon: "🎓",
-        date: {
-          start: "2024-11-01",
-          end: "2025-01-15",
-        },
-        status: "completed",
+      status: "completed",
+    },
+    {
+      courseName: "Final Portfolio Project",
+      courseIcon: "🎓",
+      category: "Capstone",
+      tags: ["Portfolio", "Showcase", "Final Project"],
+      date: {
+        start: "2024-11-01",
+        end: "2025-01-15",
       },
-    ],
-  };
+      status: "completed",
+    },
+  ],
+};
+
 
   const renderActiveCourses = () => {
     return (
@@ -402,21 +439,27 @@ export default function Courses() {
             </div>
             <div className="course-body">
               <div className="name">{course.courseName}</div>
+              {course.category && (
+                <div className="category">{course.category}</div>
+              )}
+              {course.tags && (
+                <div className="tags">
+                  {course.tags.map((tag, i) => (
+                    <span className="tag" key={i}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
               <div className="progress">
-                {
-                  <LineProgressBar
-                    attendance={parseInt(course.progress)}
-                    mandatoryLevel={0}
-                    width={300}
-                    height={7}
-                    fontSize="0"
-                  />
-                }
+                <LineProgressBar
+                  attendance={parseInt(course.progress)}
+                  mandatoryLevel={0}
+                  width={300}
+                  height={7}
+                  fontSize="0"
+                />
               </div>
-
-              {/* <div className="course-dates">
-                {course.date.start} to {course.date.end}
-              </div> */}
             </div>
           </div>
         ))}
@@ -438,10 +481,18 @@ export default function Courses() {
             </div>
             <div className="course-body">
               <div className="name">{course.courseName}</div>
-              {/* <span className="status">{course.status}</span> */}
-              {/* <div className="course-dates">
-                {course.date.start} to {course.date.end}
-              </div> */}
+              {course.category && (
+                <div className="category">{course.category}</div>
+              )}
+              {course.tags && (
+                <div className="tags">
+                  {course.tags.map((tag, i) => (
+                    <span className="tag" key={i}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ))}

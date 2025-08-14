@@ -26,7 +26,7 @@ export default function Qbot({
   // SIDEBAR
   const [activeItem, setActiveItem] = useState("DASHBOARD");
   // top
-  const sidebarItemsTop = [
+  const sidebarItemsBottom = [
     {
       name: "CHAT",
       icon: <MessageSquare />,
@@ -60,7 +60,7 @@ export default function Qbot({
     // },
   ];
   // bottom
-  const sidebarItemsBottom = [
+  const sidebarItemsTop = [
     {
       name: "PROFILE",
       icon: <User />,

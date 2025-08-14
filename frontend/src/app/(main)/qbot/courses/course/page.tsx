@@ -1,11 +1,40 @@
 "use client";
-import { Book, LayoutGrid, File, Clipboard } from "lucide-react";
+import { Book, LayoutGrid, File, Clipboard, Youtube } from "lucide-react";
 import "./course.scss";
 import { useState } from "react";
 import Ai from "@/app/api/ai/ai";
 import ReactMarkdown from "react-markdown";
 import { Mosaic } from "react-loading-indicators";
 import remarkGfm from "remark-gfm";
+
+type SourceTask = { taskName: string; source: string[] };
+type AssignmentTask = {
+  taskName: string;
+  assignment: { dueDate: string; submitted: boolean };
+};
+type TestTask = { taskName: string; test: { score: number; maxScore: number } };
+
+type Module = {
+  moduleName: string;
+  sources?: SourceTask[];
+  assignments?: AssignmentTask[];
+  tests?: TestTask[];
+  
+};
+
+type Unit = {
+  unitName: string;
+  modules: Module[];
+};
+
+type Course = {
+  courseName: string;
+  courseIcon: string;
+  date: { start: string; end: string };
+  progress: string;
+  status: string;
+  units: Unit[];
+};
 
 export default function CoursePage() {
   const data = {
@@ -347,298 +376,211 @@ export default function CoursePage() {
         ],
       },
     ],
-    allCourses: [
-      {
-        courseName: "Introduction to Web Development",
-        courseIcon: "🖥️",
-        date: {
-          start: "2025-02-01",
-          end: "2025-04-30",
-        },
-        status: "started",
-      },
-      {
-        courseName: "React for Beginners",
-        courseIcon: "⚛️",
-        date: {
-          start: "2025-03-10",
-          end: "2025-05-20",
-        },
-        status: "started",
-      },
-      {
-        courseName: "Responsive Design & Accessibility",
-        courseIcon: "📱",
-        date: {
-          start: "2025-03-20",
-          end: "2025-05-25",
-        },
-        status: "started",
-      },
-      {
-        courseName: "Backend Development with Node.js",
-        courseIcon: "🛠️",
-        date: {
-          start: "2025-06-01",
-          end: "2025-08-01",
-        },
-        status: "not started",
-      },
-      {
-        courseName: "Final Portfolio Project",
-        courseIcon: "🎓",
-        date: {
-          start: "2024-11-01",
-          end: "2025-01-15",
-        },
-        status: "completed",
-      },
-    ],
   };
 
-  // console.log(data);
-
-  // variables
+  
   const currentCourse = data.activeCourses[0];
-  const [currentUnit, setCurrentUnit] = useState(currentCourse.units[0]);
-  const [currentModule, setCurrentModule] = useState(currentUnit.modules[0]);
-  const [currentTask, setCurrentTask] = useState(
-    currentModule?.sources[0] ||
-      currentModule?.assignments[0] ||
-      currentModule?.tests[0]
+  const [currentUnit, setCurrentUnit] = useState<Unit>(currentCourse.units[0]);
+  const [currentModule, setCurrentModule] = useState<Module>(
+    currentUnit.modules[0]
   );
-  const [currentTaskType, setCurrentTaskType] = useState("SOURCE");
+  const [currentTask, setCurrentTask] = useState<
+    SourceTask | AssignmentTask | TestTask | null
+  >(
+    // currentModule?.videos?.[0] ||
+    currentModule?.sources?.[0] ||
+      currentModule?.assignments?.[0] ||
+      currentModule?.tests?.[0] ||
+      null
+  );
+  const [currentTaskType, setCurrentTaskType] = useState<
+    "SOURCE" | "ASSIGNMENT" | "TEST"
+  >(
+    // currentModule?.videos?.[0] ? 'VIDEO' :
+    currentModule?.sources?.[0]
+      ? "SOURCE"
+      : currentModule?.assignments?.[0]
+      ? "ASSIGNMENT"
+      : "TEST"
+  );
   const [currentSourcePage, setCurrentSourcePage] = useState(0);
-
   const [unitExpand, setUnitExpand] = useState(currentUnit.unitName);
+  const [sourceData, setSourceData] = useState("");
 
-  const [sourceData, setSourceData] = useState('');
+  // Type guards
+  const isSourceTask = (task: any): task is SourceTask =>
+    task && "source" in task;
+  // const isVideoTask = (task: any): task is VideoTask => task && 'video' in task;
+  const isAssignmentTask = (task: any): task is AssignmentTask =>
+    task && "assignment" in task;
+  const isTestTask = (task: any): task is TestTask => task && "test" in task;
 
+  const renderTasks = (
+    tasks: any[] | undefined,
+    taskType: "SOURCE" | "ASSIGNMENT" | "TEST"
+  ) => {
+    if (!tasks || tasks.length === 0) return null;
 
-  // mcq variables
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-
-  //render functions
-  const renderTasks = (tasks: any, taskType: string) => {
-    return (
-      <>
-        {tasks.map((e: any, index: number) => {
-          return (
-            <div
-              className="task"
-              key={`${e.taskName}-${index}`}
-              onClick={() => handleTaskonClick(e, taskType)}
-            >
-              <div className="task-icon">
-                {(() => {
-                  switch (taskType) {
-                    case "SOURCE":
-                      return <Book color="#53BF7B" />;
-                    case "ASSIGNMENT":
-                      return <File color="#84BCFC" />;
-                    case "TEST":
-                      return <Clipboard color="#E07AFF" />;
-                    default:
-                      return <span>❔</span>;
-                  }
-                })()}
-              </div>
-              <div className="task-name">{e.taskName}</div>
-            </div>
-          );
-        })}
-      </>
-    );
+    return tasks.map((task, index) => (
+      <div
+        className="task"
+        key={`${task.taskName}-${index}`}
+        onClick={() => handleTaskonClick(task, taskType)}
+      >
+        <div className="task-icon">
+          {taskType === "SOURCE" && <Book color="#53BF7B" />}
+          {taskType === "ASSIGNMENT" && <File color="#84BCFC" />}
+          {taskType === "TEST" && <Clipboard color="#E07AFF" />}
+          {/* {taskType === 'VIDEO' && <Youtube color="#FF0000" />} */}
+        </div>
+        <div className="task-name">{task.taskName}</div>
+      </div>
+    ));
   };
 
-  const renderModules = (modules: any) => {
-    return (
-      <>
-        {modules.map((e: any, index: number) => {
-          return (
-            <div
-              className="module"
-              key={`${e.moduleName}-${index}`}
-              onClick={() => handleModuleOnClick(e)}
-            >
-              {index !== 0 && <div className="module-seperator"></div>}
-              {renderTasks(e.sources, "SOURCE")}
-              {renderTasks(e.assignments, "ASSIGNMENT")}
-              {renderTasks(e.tests, "TEST")}
-            </div>
-          );
-        })}
-      </>
-    );
+  const renderModules = (modules: Module[]) => {
+    return modules.map((module, index) => (
+      <div
+        className="module"
+        key={`${module.moduleName}-${index}`}
+        onClick={() => handleModuleOnClick(module)}
+      >
+        {index !== 0 && <div className="module-seperator"></div>}
+        {renderTasks(module.sources, "SOURCE")}
+        {renderTasks(module.assignments, "ASSIGNMENT")}
+        {renderTasks(module.tests, "TEST")}
+        {/* {renderTasks(module.videos, 'VIDEO')} */}
+      </div>
+    ));
   };
 
   const renderSidebar = () => {
     return (
-      <>
-        <div className="elements">
-          {currentCourse.units.map((e: any, index: number) => {
-            return (
-              <div className="element" key={`${e.unitName}-${index}`}>
-                <div
-                  className="head"
-                  onClick={() => handleUnitOnClick(e.unitName, e)}
-                >
-                  <div className="name">{e.unitName}</div>
-                  <div className="icon">
-                    <LayoutGrid color="#d4d4d4" />
-                  </div>
-                </div>
-                {unitExpand == e.unitName && (
-                  <div className="body">
-                    <div className="modules">{renderModules(e.modules)}</div>
-                  </div>
-                )}
+      <div className="elements">
+        {currentCourse.units.map((unit, index) => (
+          <div className="element" key={`${unit.unitName}-${index}`}>
+            <div
+              className="head"
+              onClick={() => handleUnitOnClick(unit.unitName, unit)}
+            >
+              <div className="name">{unit.unitName}</div>
+              <div className="icon">
+                <LayoutGrid color="#d4d4d4" />
               </div>
-            );
-          })}
-        </div>
-      </>
+            </div>
+            {unitExpand === unit.unitName && (
+              <div className="body">
+                <div className="modules">{renderModules(unit.modules)}</div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     );
   };
 
-  // unit selection
-  const handleUnitOnClick = (unitName: string, unit: any) => {
-    unitName != unitExpand
+  const handleUnitOnClick = (unitName: string, unit: Unit) => {
+    unitName !== unitExpand
       ? setUnitExpand(unitName)
       : setUnitExpand(currentUnit.unitName);
     setCurrentUnit(unit);
     setCurrentModule(unit.modules[0]);
-    setCurrentTask(
-      unit.modules[0]?.sources[0] ||
-        unit.modules[0]?.assignments[0] ||
-        unit.modules[0]?.tests[0]
+
+    const newTask =
+      // unit.modules[0]?.videos?.[0] ||
+      unit.modules[0]?.sources?.[0] ||
+      unit.modules[0]?.assignments?.[0] ||
+      unit.modules[0]?.tests?.[0] ||
+      null;
+
+    setCurrentTask(newTask);
+    setCurrentTaskType(
+      // unit.modules[0]?.videos?.[0] ? 'VIDEO' :
+      unit.modules[0]?.sources?.[0]
+        ? "SOURCE"
+        : unit.modules[0]?.assignments?.[0]
+        ? "ASSIGNMENT"
+        : "TEST"
     );
     setCurrentSourcePage(0);
     setSourceData("");
   };
 
-  // module selection
-  const handleModuleOnClick = (module: any) => {
+  const handleModuleOnClick = (module: Module) => {
     setCurrentModule(module);
-    // setCurrentTask(
-    //   module?.sources[0] || module?.assignments[0] || module?.tests[0]
-    // );
-    // setCurrentSourcePage(0);
+    const newTask =
+      // module?.videos?.[0] ||
+      module?.sources?.[0] ||
+      module?.assignments?.[0] ||
+      module?.tests?.[0] ||
+      null;
+
+    setCurrentTask(newTask);
+    setCurrentTaskType(
+      // module?.videos?.[0] ? 'VIDEO' :
+      module?.sources?.[0]
+        ? "SOURCE"
+        : module?.assignments?.[0]
+        ? "ASSIGNMENT"
+        : "TEST"
+    );
+    setCurrentSourcePage(0);
     setSourceData("");
   };
 
-  // task selection
-  const handleTaskonClick = (task: any, type: string) => {
+  const handleTaskonClick = (
+    task: SourceTask | AssignmentTask | TestTask,
+    type: "SOURCE" | "ASSIGNMENT" | "TEST"
+  ) => {
     setCurrentTaskType(type);
     setCurrentTask(task);
     setCurrentSourcePage(0);
     setSourceData("");
   };
-  // others
+
   const handleNextOnClick = () => {
     setSourceData("");
     if (
       currentTaskType === "SOURCE" &&
-      Array.isArray(currentTask?.source) &&
-      currentSourcePage !== (currentTask.source?.length ?? 0)
+      isSourceTask(currentTask) &&
+      currentSourcePage < currentTask.source.length - 1
     ) {
       setCurrentSourcePage((prev) => prev + 1);
-      return;
     }
   };
 
-  // instructions
-
   const generateAIContent = (task: any, taskType: string) => {
+    // if (taskType === 'VIDEO') return null;
+
     let instruction = "";
-
     if (taskType === "ASSIGNMENT") {
-      instruction = `You are an AI that generates assignments based on the topic: ${task.taskName}. Provide a detailed assignment with clear instructions, guidelines, and resources if applicable.`;
+      instruction = `Generate assignment for: ${task.taskName}`;
     } else if (taskType === "TEST") {
-      instruction = `You are an AI that generates a quiz for the topic: ${task.taskName}. Create a multiple-choice test with 20 questions and 4 options, indicating the correct answer.`;
-    } else if (taskType === "SOURCE") {
-      instruction =  `You are an AI that teaches the unit on this topic: ${task.source[currentSourcePage]}. 
-      Provide detailed teaching material with clear explanations (at least 2000 words).add resource links at the end`
-      
-      // you are response should be strictly an object in this format: {title : ${task.source[currentSourcePage]},content: "..... all texts", resources:[...all links]}
+      instruction = `Generate test for: ${task.taskName}`;
+    } else if (taskType === "SOURCE" && isSourceTask(task)) {
+      instruction = `Teach about: ${task.source[currentSourcePage]}`;
     }
-
-
     return instruction;
   };
 
-  // ai response
   const handleTaskContentGeneration = (task: any, taskType: string) => {
+    // if (taskType === 'VIDEO') return null;
+
     const instruction = generateAIContent(task, taskType);
-    let aioutput; 
     return (
       <Ai
-      input={instruction}
-      onResponse={(res) => {
-          // console.log(aioutput);
-          // console.log(res);
+        input={instruction}
+        onResponse={(res) => {
           setSourceData(res);
         }}
       />
     );
   };
 
-  // mcq
-  // const renderMCQ = () => {
-  //   const currentQuestion = currentTask.test.questions[currentQuestionIndex];
-
-  //   return (
-  //     <div className="mcq">
-  //       <div className="question">{currentQuestion.question}</div>
-  //       <div className="options">
-  //         {currentQuestion.options.map((option, index) => (
-  //           <div
-  //             key={index}
-  //             className={`option ${selectedAnswer === option ? (isCorrect ? "correct" : "incorrect") : ""}`}
-  //             onClick={() => handleAnswerSelection(option)}
-  //           >
-  //             {option}
-  //           </div>
-  //         ))}
-  //       </div>
-
-  //       {showFeedback && (
-  //         <div className={`feedback ${isCorrect ? "correct" : "incorrect"}`}>
-  //           {isCorrect ? "Correct!" : "Incorrect. The correct answer is: " + currentQuestion.correctAnswer}
-  //         </div>
-  //       )}
-
-  //       <button className="next-button" onClick={handleNextQuestion}>
-  //         {currentQuestionIndex < currentTask.test.questions.length - 1 ? "Next" : "Finish"}
-  //       </button>
-  //     </div>
-  //   );
-  // };
-  // const handleAnswerSelection = (answer: string) => {
-  //   setSelectedAnswer(answer);
-  //   const isAnswerCorrect = answer === currentTask.test.questions[currentQuestionIndex].correctAnswer;
-  //   setIsCorrect(isAnswerCorrect);
-  //   setShowFeedback(true);
-  // };
-
-  // const handleNextQuestion = () => {
-  //   if (currentQuestionIndex < currentTask.test.questions.length - 1) {
-  //     setCurrentQuestionIndex(currentQuestionIndex + 1);
-  //     setSelectedAnswer(null);
-  //     setIsCorrect(null);
-  //     setShowFeedback(false);
-  //   } else {
-  //     // If all questions are answered, show some message or move to next task
-  //     alert("You have completed the quiz!");
-  //   }
-  // };
-
   return (
     <>
-      {handleTaskContentGeneration(currentTask, currentTaskType)}
+      {currentTask && handleTaskContentGeneration(currentTask, currentTaskType)}
+
       <div className="course-container">
         <div className="course-wrapper">
           <div className="course-head">
@@ -655,8 +597,9 @@ export default function CoursePage() {
                   <div>{"->"}</div>
                   <div className="module">{currentModule.moduleName}</div>
                 </div>
-                <div className="page-topic">{currentTask.taskName}</div>
+                <div className="page-topic">{currentTask?.taskName}</div>
               </div>
+
               <div className="page-content">
                 {sourceData === "" ? (
                   <div className="loading">
@@ -676,24 +619,22 @@ export default function CoursePage() {
                   </div>
                 )}
               </div>
+
               <div className="page-footer">
-                {currentTaskType == "SOURCE" && (
+                {currentTaskType === "SOURCE" && isSourceTask(currentTask) && (
                   <div className="page-count">
                     <div className="of">{currentSourcePage + 1}</div>
                     <div className="bar">/</div>
-                    <div className="total">
-                      {currentTask.source?.length ?? 0}
+                    <div className="total">{currentTask.source.length}</div>
+                  </div>
+                )}
+                {currentTaskType === "SOURCE" &&
+                  isSourceTask(currentTask) &&
+                  currentSourcePage < currentTask.source.length - 1 && (
+                    <div className="page-next" onClick={handleNextOnClick}>
+                      NEXT
                     </div>
-                  </div>
-                )}
-                {currentSourcePage !== (currentTask.source?.length ?? 0) && (
-                  <div
-                    className="page-next"
-                    onClick={() => handleNextOnClick()}
-                  >
-                    NEXT
-                  </div>
-                )}
+                  )}
               </div>
             </div>
           </div>
